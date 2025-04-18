@@ -15,53 +15,31 @@
             <button type="submit">Enviar</button>
         </form>
 
-        <p id="response-message"></p> <!-- Para mostrar la respuesta del backend -->
+        <p id="response-message"></p>
 
         <script>
-            // Agregar una llamada AJAX usando fetch
             document.getElementById("user-form").addEventListener("submit", function (event) {
-                event.preventDefault(); // Prevenir la acción por defecto del formulario
-
-                // Capturar los valores ingresados
+                event.preventDefault();
                 const username = document.getElementById("username").value;
                 const password = document.getElementById("password").value;
 
-                // Validar los datos en el frontend (opcional pero recomendado)
-                if (!username || !password) {
-                    alert("Por favor, completa todos los campos.");
-                    return;
-                }
-
-                // Llamada AJAX para enviar los datos al backend
                 fetch("backend.php", {
-                    method: "POST", // Método HTTP
-                    headers: {
-                        "Content-Type": "application/json" // Tipo de contenido enviado
-                    },
-                    body: JSON.stringify({username: username, password: password}) // Datos enviados como JSON
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({username, password})
                 })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error("Error en la respuesta del servidor.");
-                            }
-                            return response.json();
-                        })
+                        .then(response => response.json())
                         .then(data => {
-                            // Mostrar el mensaje de éxito o error desde el backend
                             const messageElement = document.getElementById("response-message");
                             if (data.status === "ok") {
                                 messageElement.textContent = "Datos enviados correctamente.";
                                 messageElement.style.color = "green";
                             } else {
-                                messageElement.textContent = "Error al enviar los datos: " + data.message;
+                                messageElement.textContent = "Error: " + data.message;
                                 messageElement.style.color = "red";
                             }
                         })
-                        .catch(error => {
-                            // Manejo de errores
-                            console.error("Error:", error);
-                            alert("Ocurrió un error al enviar los datos. Por favor, intenta nuevamente.");
-                        });
+                        .catch(error => console.error("Error:", error));
             });
         </script>
     </body>
