@@ -1,10 +1,68 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <title>Página de Práctica Formativa</title>
-</head>
-<body>
-  <h1>Bienvenido a la Práctica Formativa N°1</h1>
-</body>
+<html>
+    <head>
+        <title>Formulario de Datos Personales</title>
+    </head>
+    <body>
+        <h1>Formulario de Datos Personales</h1>
+        <form id="user-form">
+            <label for="username">Nombre de Usuario:</label>
+            <input type="text" id="username" name="username" placeholder="Ingresa tu nombre de usuario" required>
+
+            <label for="password">Contraseña:</label>
+            <input type="password" id="password" name="password" placeholder="Ingresa tu contraseña" required>
+
+            <button type="submit">Enviar</button>
+        </form>
+
+        <p id="response-message"></p> <!-- Para mostrar la respuesta del backend -->
+
+        <script>
+            // Agregar una llamada AJAX usando fetch
+            document.getElementById("user-form").addEventListener("submit", function (event) {
+                event.preventDefault(); // Prevenir la acción por defecto del formulario
+
+                // Capturar los valores ingresados
+                const username = document.getElementById("username").value;
+                const password = document.getElementById("password").value;
+
+                // Validar los datos en el frontend (opcional pero recomendado)
+                if (!username || !password) {
+                    alert("Por favor, completa todos los campos.");
+                    return;
+                }
+
+                // Llamada AJAX para enviar los datos al backend
+                fetch("backend.php", {
+                    method: "POST", // Método HTTP
+                    headers: {
+                        "Content-Type": "application/json" // Tipo de contenido enviado
+                    },
+                    body: JSON.stringify({username: username, password: password}) // Datos enviados como JSON
+                })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error("Error en la respuesta del servidor.");
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            // Mostrar el mensaje de éxito o error desde el backend
+                            const messageElement = document.getElementById("response-message");
+                            if (data.status === "ok") {
+                                messageElement.textContent = "Datos enviados correctamente.";
+                                messageElement.style.color = "green";
+                            } else {
+                                messageElement.textContent = "Error al enviar los datos: " + data.message;
+                                messageElement.style.color = "red";
+                            }
+                        })
+                        .catch(error => {
+                            // Manejo de errores
+                            console.error("Error:", error);
+                            alert("Ocurrió un error al enviar los datos. Por favor, intenta nuevamente.");
+                        });
+            });
+        </script>
+    </body>
 </html>
