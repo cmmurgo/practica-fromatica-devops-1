@@ -33,5 +33,5 @@ Los siguientes parámetros se envían desde el frontend al backend:
 - Formato JSON con `status` y `message`.
 ```
 
----
+
 
