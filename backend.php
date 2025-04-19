@@ -24,7 +24,7 @@ if (strlen($username) < 3) {
     exit;
 }
 
-if (strlen($password) < 6) {
+if (strlen($password) < 8) {
     echo json_encode([
         "status" => "error",
         "message" => "La contraseña debe tener al menos 6 caracteres."
